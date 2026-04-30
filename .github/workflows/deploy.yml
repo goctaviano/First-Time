@@ -41,7 +41,7 @@ jobs:
             --template-file ${{ env.TEMPLATE_FILE }} \
             --parameter-overrides \
                 InstanceType=t2.micro \
-                KeyPairName=my-key-pair \
+                KeyPairName=graciela-key-pair \
                 SSHLocation=0.0.0.0/0 \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset
