@@ -1,9 +1,22 @@
+name: Deploy CloudFormation Stack
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  STACK_NAME: my-ec2-stack
+  TEMPLATE_FILE: cloudformation/template.yml
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
 jobs:
   deploy:
     name: Deploy to AWS
     runs-on: ubuntu-latest
     permissions:
-      id-token: write       # Required for OIDC
+      id-token: write
       contents: read
 
     steps:
@@ -15,3 +28,27 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Validate CloudFormation Template
+        run: |
+          aws cloudformation validate-template \
+            --template-body file://${{ env.TEMPLATE_FILE }}
+
+      - name: Deploy CloudFormation Stack
+        run: |
+          aws cloudformation deploy \
+            --stack-name ${{ env.STACK_NAME }} \
+            --template-file ${{ env.TEMPLATE_FILE }} \
+            --parameter-overrides \
+                InstanceType=t2.micro \
+                KeyPairName=my-key-pair \
+                SSHLocation=0.0.0.0/0 \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset
+
+      - name: Get Stack Outputs
+        run: |
+          aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query "Stacks[0].Outputs" \
+            --output table
