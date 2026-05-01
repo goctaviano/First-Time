@@ -37,7 +37,7 @@ jobs:
             --stack-name ${{ env.STACK_NAME }} \
             --template-file ${{ env.TEMPLATE_FILE }} \
             --parameter-overrides \
-                InstanceType=t2.micro \
+                InstanceType=t3.micro \
                 KeyPairName=my-key-pair \
                 SSHLocation=0.0.0.0/0 \
             --capabilities CAPABILITY_IAM \
