@@ -38,7 +38,7 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyPairName
-      ImageId: ami-0c02fb55956c7d316
+      ImageId: ami-097a2df4ac947655f
       SecurityGroupIds:
         - !Ref EC2SecurityGroup
       Tags:
